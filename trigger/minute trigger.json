@@ -1,0 +1,24 @@
+{
+	"name": "minute trigger",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "cosmos_sql_pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 1,
+				"startTime": "2025-02-25T00:00:00",
+				"timeZone": "Singapore Standard Time"
+			}
+		}
+	}
+}
