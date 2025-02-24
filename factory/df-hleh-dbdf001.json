@@ -1,0 +1,15 @@
+{
+	"name": "df-hleh-dbdf001",
+	"location": "southeastasia",
+	"identity": {
+		"type": "SystemAssigned,UserAssigned",
+		"principalId": "f1f15aa5-0794-435c-bbc8-f7685eb9b8a2",
+		"tenantId": "64991f7f-44d6-4d8c-9cd4-7862e8cb94c6",
+		"userAssignedIdentities": {
+			"/subscriptions/d38f5d31-5c08-4ef3-98db-b75952b40114/resourcegroups/rg-hleh-db001/providers/Microsoft.ManagedIdentity/userAssignedIdentities/mi-hleh-sqladmin001": {
+				"clientId": "44e2d62b-2b54-4ba9-b485-601ce0f38d10",
+				"principalId": "0cb57759-4f91-41d8-80e7-82006125edd0"
+			}
+		}
+	}
+}

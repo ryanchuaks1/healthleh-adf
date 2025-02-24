@@ -1,0 +1,53 @@
+{
+	"name": "AzureSqlTable3",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [
+			{
+				"name": "id",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "phoneNumber",
+				"type": "varchar"
+			},
+			{
+				"name": "cumulativeStepsToday",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "caloriesBurned",
+				"type": "int",
+				"precision": 10
+			},
+			{
+				"name": "activityDate",
+				"type": "datetime",
+				"precision": 23,
+				"scale": 3
+			},
+			{
+				"name": "latitude",
+				"type": "float",
+				"precision": 15
+			},
+			{
+				"name": "longitude",
+				"type": "float",
+				"precision": 15
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Activities"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

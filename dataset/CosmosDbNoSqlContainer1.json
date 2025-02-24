@@ -1,0 +1,63 @@
+{
+	"name": "CosmosDbNoSqlContainer1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "CosmosDbNoSql1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CosmosDbSqlApiCollection",
+		"schema": {
+			"type": "object",
+			"properties": {
+				"cdbhlehiotcnt001": {
+					"type": "string"
+				},
+				"Properties": {
+					"type": "object",
+					"properties": {
+						"user": {
+							"type": "string"
+						},
+						"location": {
+							"type": "string"
+						},
+						"info": {
+							"type": "string"
+						}
+					}
+				},
+				"SystemProperties": {
+					"type": "object",
+					"properties": {
+						"iothub-connection-device-id": {
+							"type": "string"
+						},
+						"iothub-connection-auth-method": {
+							"type": "string"
+						},
+						"iothub-connection-auth-generation-id": {
+							"type": "string"
+						},
+						"iothub-enqueuedtime": {
+							"type": "string"
+						},
+						"iothub-message-source": {
+							"type": "string"
+						}
+					}
+				},
+				"iothub-name": {
+					"type": "string"
+				},
+				"Body": {
+					"type": "string"
+				}
+			}
+		},
+		"typeProperties": {
+			"collectionName": "cdb-hleh-iotcnt001"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

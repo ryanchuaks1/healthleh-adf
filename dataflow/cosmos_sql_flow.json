@@ -1,0 +1,112 @@
+{
+	"name": "cosmos_sql_flow",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "CosmosDbNoSqlContainer1",
+						"type": "DatasetReference"
+					},
+					"name": "cosmos"
+				},
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable1",
+						"type": "DatasetReference"
+					},
+					"name": "sql"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "AzureSqlTable3",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "finduser"
+				},
+				{
+					"name": "derivedColumn1"
+				},
+				{
+					"name": "select1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          cdbhlehiotcnt001 as string,",
+				"          Properties as (user as string, location as string, info as string),",
+				"          SystemProperties as ({iothub-connection-device-id} as string, {iothub-connection-auth-method} as string, {iothub-connection-auth-generation-id} as string, {iothub-enqueuedtime} as string, {iothub-message-source} as string),",
+				"          {iothub-name} as string,",
+				"          Body as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'document') ~> cosmos",
+				"source(output(",
+				"          PhoneNumber as string,",
+				"          FirstName as string,",
+				"          LastName as string,",
+				"          Height as double,",
+				"          Weight as double,",
+				"          WeightGoal as double",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     isolationLevel: 'READ_UNCOMMITTED',",
+				"     format: 'table') ~> sql",
+				"cosmos, sql join(Properties.user == PhoneNumber,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> finduser",
+				"select1 derive(cosmos_datetime = toTimestamp(\r",
+				"    concat(substring(cosmos_datetime, 0, 23), 'Z'),\r",
+				"    \"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'\"\r",
+				"),",
+				"          cosmos_long = toFloat(trim(split(cosmos_location, ',')[2])),",
+				"          cosmos_lat = toFloat(trim(split(cosmos_location, ',')[1]))) ~> derivedColumn1",
+				"finduser select(mapColumn(",
+				"          cosmos_phonenumber = Properties.user,",
+				"          cosmos_location = Properties.location,",
+				"          cosmos_datetime = SystemProperties.{iothub-enqueuedtime},",
+				"          sql_phonenumber = PhoneNumber",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> select1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          id as integer,",
+				"          phoneNumber as string,",
+				"          cumulativeStepsToday as integer,",
+				"          caloriesBurned as integer,",
+				"          activityDate as timestamp,",
+				"          latitude as double,",
+				"          longitude as double",
+				"     ),",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError',",
+				"     mapColumn(",
+				"          phoneNumber = cosmos_phonenumber,",
+				"          activityDate = cosmos_datetime,",
+				"          latitude = cosmos_lat,",
+				"          longitude = cosmos_long",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}
