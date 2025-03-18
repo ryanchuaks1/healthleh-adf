@@ -26,6 +26,10 @@
 		"AzureSqlDatabase1_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "cooladmin"
+		},
+		"eventgrid_cosmos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/d38f5d31-5c08-4ef3-98db-b75952b40114/resourceGroups/rg-hleh-db001/providers/Microsoft.EventGrid/topics/iotdata"
 		}
 	},
 	"variables": {
@@ -41,6 +45,26 @@
 				"type": "CosmosDb",
 				"typeProperties": {
 					"connectionString": "[parameters('CosmosDbNoSql1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/minute trigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Minute",
+						"interval": 1,
+						"startTime": "2025-02-25T00:00:00",
+						"timeZone": "Singapore Standard Time"
+					}
 				}
 			},
 			"dependsOn": []
@@ -497,12 +521,12 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/minute trigger')]",
+			"name": "[concat(parameters('factoryName'), '/eventgrid_cosmos')]",
 			"type": "Microsoft.DataFactory/factories/triggers",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"annotations": [],
-				"runtimeState": "Stopped",
+				"runtimeState": "Started",
 				"pipelines": [
 					{
 						"pipelineReference": {
@@ -512,14 +536,16 @@
 						"parameters": {}
 					}
 				],
-				"type": "ScheduleTrigger",
+				"type": "CustomEventsTrigger",
 				"typeProperties": {
-					"recurrence": {
-						"frequency": "Minute",
-						"interval": 1,
-						"startTime": "2025-02-25T00:00:00",
-						"timeZone": "Singapore Standard Time"
-					}
+					"subjectEndsWith": "",
+					"subjectBeginsWith": "",
+					"scope": "[parameters('eventgrid_cosmos_properties_typeProperties_scope')]",
+					"events": [
+						"CosmosDB.DocumentChanged",
+						"CosmosDB",
+						"DocumentChanged"
+					]
 				}
 			},
 			"dependsOn": [

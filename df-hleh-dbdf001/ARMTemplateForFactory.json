@@ -26,6 +26,10 @@
 		"AzureSqlDatabase1_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "cooladmin"
+		},
+		"eventgrid_cosmos_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/d38f5d31-5c08-4ef3-98db-b75952b40114/resourceGroups/rg-hleh-db001/providers/Microsoft.EventGrid/topics/iotdata"
 		}
 	},
 	"variables": {
@@ -372,15 +376,7 @@
 			"properties": {
 				"annotations": [],
 				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "cosmos_sql_pipeline",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
+				"pipelines": [],
 				"type": "ScheduleTrigger",
 				"typeProperties": {
 					"recurrence": {
@@ -391,9 +387,7 @@
 					}
 				}
 			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/cosmos_sql_pipeline')]"
-			]
+			"dependsOn": []
 		},
 		{
 			"name": "[concat(parameters('factoryName'), '/cosmos_sql_flow')]",
@@ -525,6 +519,38 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/eventgrid_cosmos')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Started",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "cosmos_sql_pipeline",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "CustomEventsTrigger",
+				"typeProperties": {
+					"subjectEndsWith": "",
+					"subjectBeginsWith": "",
+					"scope": "[parameters('eventgrid_cosmos_properties_typeProperties_scope')]",
+					"events": [
+						"CosmosDB.DocumentChanged",
+						"CosmosDB",
+						"DocumentChanged"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/cosmos_sql_pipeline')]"
+			]
 		}
 	]
 }
