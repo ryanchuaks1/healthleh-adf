@@ -1,0 +1,26 @@
+{
+	"name": "eventgrid_cosmos",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "cosmos_sql_pipeline",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "CustomEventsTrigger",
+		"typeProperties": {
+			"subjectEndsWith": "",
+			"subjectBeginsWith": "",
+			"scope": "/subscriptions/d38f5d31-5c08-4ef3-98db-b75952b40114/resourceGroups/rg-hleh-db001/providers/Microsoft.EventGrid/topics/iotdata",
+			"events": [
+				"CosmosDB.DocumentChanged",
+				"CosmosDB",
+				"DocumentChanged"
+			]
+		}
+	}
+}
